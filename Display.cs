@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 
 namespace GroupDMinefieldMidterm
@@ -8,6 +9,7 @@ namespace GroupDMinefieldMidterm
     {
         public static void DisplayBoard(GameBoard gameBoard)
         {
+            Console.Clear();
             DisplayScore(gameBoard.RemainingCells);
             DisplayColumns(gameBoard.BoardColumns);
 
@@ -18,15 +20,17 @@ namespace GroupDMinefieldMidterm
                 Console.Write($"{label}");
                 Console.Write("|");
 
-                StringBuilder cellOutput = new StringBuilder("");
+                StringBuilder cellOutput = new StringBuilder("");               
 
                 for (int j = 0; j < gameBoard.BoardColumns; j++)
                 {
                     cellOutput.Clear();
+                    Console.ForegroundColor = ConsoleColor.Black;
 
                     if (gameBoard.Board[i, j].Revealed)
                     {
                         GameValues cellValue = gameBoard.Board[i, j].CellValue;
+                        Console.BackgroundColor = ConsoleColor.DarkGray;
 
 
                         switch (cellValue)
@@ -35,17 +39,22 @@ namespace GroupDMinefieldMidterm
                                 cellOutput.Append("   ");
                                 break;
                             case GameValues.Mine:
+                                Console.ForegroundColor = ConsoleColor.DarkRed;
                                 cellOutput.Append(" M ");
                                 break;
-                            default:
+                            default:                                
                                 cellOutput.Append($" {(int)cellValue} ");
                                 break;
                         }
                         Console.Write(cellOutput);
+                        Console.ResetColor();
                     }
                     else
-                    {
-                        Console.Write(" - ");
+                    {                        
+                        Console.BackgroundColor = ConsoleColor.Gray;
+                        
+                        Console.Write(" * ");
+                        Console.ResetColor();
                     }                    
                 }
                 Console.Write("|");
