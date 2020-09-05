@@ -75,13 +75,12 @@ namespace GroupDMinefieldMidterm
                 {
                     row = random.Next(0, BoardRows);
                     column = random.Next(0, BoardColumns);
-
                 } while (Board[row, column].CellValue == GameValues.Mine);
-               
-                Board[row, column].CellValue = GameValues.Mine;               
+
+                Board[row, column].CellValue = GameValues.Mine;
                 PlaceNumber(row, column);
-                MineCoordinates.Add(new Point(row, column));                
-             }
+                MineCoordinates.Add(new Point(row, column));
+            }
         }
 
         private void PlaceNumber(int row, int column)
@@ -91,12 +90,11 @@ namespace GroupDMinefieldMidterm
 
             foreach (Point point in surroundingCells)
             {
-
                 int currentValue = (int)Board[point.X, point.Y].CellValue;
+
                 if (currentValue != 9)
-                {
                     currentValue += 1;
-                }
+
                 Board[point.X, point.Y].CellValue = (GameValues)currentValue;
             }
         }
@@ -127,10 +125,9 @@ namespace GroupDMinefieldMidterm
 
         private void RevealMines()
         {
-            foreach (var mine in MineCoordinates)
-            {
+            foreach (var mine in MineCoordinates)            
                 Board[mine.X, mine.Y].Revealed = true;
-            }
+            
         }
         public void CheckCell(Point point)
         {
@@ -142,7 +139,7 @@ namespace GroupDMinefieldMidterm
                 {
                     case GameValues.Empty:
                         Board[point.X, point.Y].Revealed = true;
-                        RemainingCells --;
+                        RemainingCells--;
                         List<Point> surroundingCells = GetSurroundingCells(point.X, point.Y);
                         foreach (Point cell in surroundingCells)
                         {
@@ -155,7 +152,7 @@ namespace GroupDMinefieldMidterm
                         break;
                     default:
                         Board[point.X, point.Y].Revealed = true;
-                        RemainingCells --;
+                        RemainingCells--;
                         break;
                 }
             }
