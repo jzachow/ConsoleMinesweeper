@@ -14,7 +14,7 @@ namespace GroupDMinefieldMidterm
         public Minesweeper()
         {
             GameOver = false;
-            GameWon = false;            
+            GameWon = false;
             Game = new GameBoard(GetUserDifficulty());
             Display.DisplayBoard(Game);
         }
@@ -37,7 +37,7 @@ namespace GroupDMinefieldMidterm
             switch (userDifficulty)
             {
                 case 1:
-                    return "Beginner";                    
+                    return "Beginner";
                 case 2:
                     return "Intermediate";
                 case 3:
@@ -50,21 +50,29 @@ namespace GroupDMinefieldMidterm
 
         public void GetUserSelection()
         {
-            var columnInput = GetUserColumn();
-            var rowInput = GetUserRow();
+            bool checkFlag = CheckOrFlag();
+            int columnInput = GetUserColumn();
+            int rowInput = GetUserRow();
             Point point = new Point(rowInput, columnInput);
-            Game.CheckCell(point);
+
+            if (checkFlag)
+                Game.CheckCell(point);
+            else
+                Game.FlagCell(point);
+
+
             if (Game.HitMine)
-            {
-                GameOver = true;               
-            }
-            else if (Game.RemainingCells <= 0)
-            {
+                GameOver = true;
+
+            if (Game.RemainingCells <= 0)
                 GameWon = true;
-            }
+
+            if (Game.FlaggedAllMines)
+                GameWon = true;
+
             Display.DisplayBoard(Game);
         }
-                
+
 
         private int GetUserColumn()
         {
@@ -80,23 +88,41 @@ namespace GroupDMinefieldMidterm
                 parsed = int.TryParse(userInput, out userColumn);
             }
 
-            return userColumn ;
+            return userColumn;
         }
-        
+
         private int GetUserRow()
         {
             var upperBound = Game.BoardRows + 64;
             Console.WriteLine("\nPlease enter row");
             string userInput = Console.ReadLine().ToUpper();
-            char userRow;            
+            char userRow;
 
             while ((!Char.TryParse(userInput, out userRow)) || (userRow < 'A') || userRow > (char)upperBound)
             {
                 Console.WriteLine("\nInvalid entry. Please enter a valid row");
-                userInput = Console.ReadLine().ToUpper();                
+                userInput = Console.ReadLine().ToUpper();
             }
 
             return (int)(userRow - 65);
+        }
+
+        private bool CheckOrFlag()
+        {
+            Console.WriteLine("\nEnter 'c' to check a cell or 'f' to flag/unflag a cell: ");
+            string userInput = Console.ReadLine();
+
+            while (!userInput.Equals("c", StringComparison.CurrentCultureIgnoreCase) &&
+                   !userInput.Equals("f", StringComparison.CurrentCultureIgnoreCase))
+            {
+                Console.WriteLine("Invalid entry. Please enter 'c' or 'f'.");
+                userInput = Console.ReadLine();
+            }
+
+            if (userInput.ToLower() == "c")
+                return true;
+            else
+                return false;
         }
     }
 }

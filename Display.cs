@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
+
 namespace GroupDMinefieldMidterm
 {
     public static class Display
     {
         public static void DisplayBoard(GameBoard gameBoard)
-        {
-            Console.Clear();
+        {          
+           
             DisplayScore(gameBoard.RemainingCells);
             DisplayColumns(gameBoard.BoardColumns);
 
@@ -26,12 +27,15 @@ namespace GroupDMinefieldMidterm
                 {
                     cellOutput.Clear();
                     Console.ForegroundColor = ConsoleColor.Black;
-
-                    if (gameBoard.Board[i, j].Revealed)
+                    if (gameBoard.Board[i, j].Flagged)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Gray;                        
+                        cellOutput.Append($" F ");                       
+                    }
+                    else if (gameBoard.Board[i, j].Revealed)
                     {
                         GameValues cellValue = gameBoard.Board[i, j].CellValue;
                         Console.BackgroundColor = ConsoleColor.DarkGray;
-
 
                         switch (cellValue)
                         {
@@ -45,17 +49,15 @@ namespace GroupDMinefieldMidterm
                             default:                                
                                 cellOutput.Append($" {(int)cellValue} ");
                                 break;
-                        }
-                        Console.Write(cellOutput);
-                        Console.ResetColor();
+                        }                        
                     }
                     else
                     {                        
                         Console.BackgroundColor = ConsoleColor.Gray;
-                        
-                        Console.Write(" * ");
-                        Console.ResetColor();
-                    }                    
+                        cellOutput.Append(" * ");                        
+                    }
+                    Console.Write(cellOutput);
+                    Console.ResetColor();
                 }
                 Console.Write("|");
             }

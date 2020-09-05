@@ -8,5 +8,6 @@ namespace GroupDMinefieldMidterm
     {
         public GameValues CellValue { get; set; }
         public bool Revealed { get; set; }
+        public bool Flagged { get; set; }
     }
 }

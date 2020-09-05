@@ -10,10 +10,12 @@ namespace GroupDMinefieldMidterm
     public class GameBoard
     {
         public bool HitMine { get; set; }
+        public bool FlaggedAllMines { get; set; }
         public List<Point> MineCoordinates { get; set; }
         public int BoardRows { get; set; }
         public int BoardColumns { get; set; }
         public int NumberOfMines { get; set; }
+        public int NumberOfFlags { get; set; }
         public Cell[,] Board { get; set; }
         public int RemainingCells { get; set; }
 
@@ -62,6 +64,7 @@ namespace GroupDMinefieldMidterm
                 default:
                     break;
             }
+            NumberOfFlags = NumberOfMines;
         }
 
         private void PlaceMines()
@@ -131,19 +134,22 @@ namespace GroupDMinefieldMidterm
         }
         public void CheckCell(Point point)
         {
-            var cellValue = Board[point.X, point.Y].CellValue;
+            Cell cell = Board[point.X, point.Y];
 
-            if (!Board[point.X, point.Y].Revealed)
+            if (cell.Flagged)
+                Console.WriteLine("Cell is flagged. You cannot check a flagged cell");
+
+            if (!cell.Revealed && !cell.Flagged)
             {
-                switch (cellValue)
+                switch (cell.CellValue)
                 {
                     case GameValues.Empty:
-                        Board[point.X, point.Y].Revealed = true;
+                        cell.Revealed = true;
                         RemainingCells--;
                         List<Point> surroundingCells = GetSurroundingCells(point.X, point.Y);
-                        foreach (Point cell in surroundingCells)
+                        foreach (Point points in surroundingCells)
                         {
-                            CheckCell(cell);
+                            CheckCell(points);
                         }
                         break;
                     case GameValues.Mine:
@@ -151,12 +157,46 @@ namespace GroupDMinefieldMidterm
                         RevealMines();
                         break;
                     default:
-                        Board[point.X, point.Y].Revealed = true;
+                        cell.Revealed = true;
                         RemainingCells--;
                         break;
                 }
             }
+        }      
+        
+        public void FlagCell(Point point)
+        {
+            Cell cell = Board[point.X, point.Y];
+
+            if (NumberOfFlags < 1)
+                Console.WriteLine("You are out of flags to use. Please unflag a cell to get flags back");
+            else if (cell.Revealed)
+                Console.WriteLine("You cannot flag a revealed cell.");
+            else if (cell.Flagged)
+            {
+                cell.Flagged = false;
+                NumberOfFlags++;
+            }
+            else
+            {
+                cell.Flagged = true;
+                NumberOfFlags--;
+            }
+
+            CheckAllMinesFlagged();
         }
+
+        private void CheckAllMinesFlagged()
+        {
+            bool allFlagged = true;
+
+            foreach (Point point in MineCoordinates)
+                if (!Board[point.X, point.Y].Flagged)
+                    allFlagged = false;
+
+            if (allFlagged)
+                FlaggedAllMines = true;
+        }                   
     }
 }
 
