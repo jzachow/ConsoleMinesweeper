@@ -7,10 +7,9 @@ namespace GroupDMinefieldMidterm
     {
         static void Main(string[] args)
         {
-            bool userContinue = true;
-            Console.SetWindowSize(48, 64);
+            bool userContinue = true;           
 
-            Console.WriteLine("Welcome to Group D's Minesweeper game!");
+            Console.WriteLine("Welcome to Justin's Minesweeper game!");
 
             while (userContinue)
             {
